@@ -7,7 +7,7 @@
 
 ## Load data
 
-`mydata = spark.read.csv('./Data/MyData.csv', header=True)`
+`mydata = spark.read.csv('/home/user/projects/in_data/MyData.csv', header=True)`
 
   
 
@@ -66,7 +66,7 @@ Replace `asc` by `desc` for descending order
 `temp_data = mydata_limited.withColumn("lastname_regno", concat(col("lastname"), lit("_"), col("regno")))`
 ## Create new column based on a condition
 `temp_data = mydata_limited\
-                .withColumn("lastname_regno", when(mydata_limited["regno"] == "a0000", "NAMELESS")\
+                .withColumn("lastname_regno", when(mydata_limited["regno"] == "a0000", "NO_NAME_GUY")\
                                             .otherwise(concat(col("lastname"), lit("_"), col("regno")))`
   
 
@@ -74,7 +74,7 @@ Replace `asc` by `desc` for descending order
 ~~~
 mydata_limited.withColumn("lastname_regno", concat(col("lastname"), lit("_"), col("regno")))\
 
-.filter(mydata_limited.regno == "a0102")\
+.filter(mydata_limited.lastname == "Wayne")\
 
 .select(["firsname", "lastname_regno"])\
 
@@ -94,6 +94,8 @@ temp_data = mydata_limited.withColumn("lastname_regno", concat(col("lastname"), 
 
 ## Joining 2 dataframes
 ~~~
-mydata_limited.withColumnRenamed("regno", "regno2").join(registrations, col("regno") == col("regno"), "inner").drop("regno2")
+temp_data = mydata_limited.withColumnRenamed("regno", "regno2")\
+.join(registrations, col("regno") == col("regno"), "inner")\
+.drop("regno2")
 ~~~
 `regno` is renamed in one dataframe before join since they are named the same in both dataframes and then dropped after the join.
