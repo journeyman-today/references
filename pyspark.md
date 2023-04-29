@@ -64,7 +64,10 @@ Replace `asc` by `desc` for descending order
 ## Create new column
 
 `temp_data = mydata_limited.withColumn("lastname_regno", concat(col("lastname"), lit("_"), col("regno")))`
-
+## Create new column based on a condition
+`temp_data = mydata_limited\
+                .withColumn("lastname_regno", when(mydata_limited["regno"] == "a0000", "NAMELESS")\
+                                            .otherwise(concat(col("lastname"), lit("_"), col("regno")))`
   
 
 ## Chain multiple operations together and show result on screen
@@ -88,3 +91,9 @@ temp_data = mydata_limited.withColumn("lastname_regno", concat(col("lastname"), 
 
 .select(["firsname", "lastname_regno"])
 ~~~
+
+## Joining 2 dataframes
+~~~
+mydata_limited.withColumnRenamed("regno", "regno2").join(registrations, col("regno") == col("regno"), "inner").drop("regno2")
+~~~
+`regno` is renamed in one dataframe before join since they are named the same in both dataframes and then dropped after the join.
